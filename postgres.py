@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from ansible.module_utils import basic
 from ansible.module_utils.basic import *
+import psycopg2 as psql
 
 class PostgresHandler():
     def __init__(self):
@@ -16,9 +17,22 @@ class PostgresHandler():
             "query": { "required": True, "type": "str" },
         }
 
+    def setModuleParams(self, module_params):
+        self.host = module_params['host']
+        self.port = module_params['port']
+        self.user = module_params['user']
+        self.password = module_params['password']
+        self.database = module_params['database']
+        self.query = module_params['query']
+
+    def connectToDatabase(self):
+        psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
+
 def main():
     postgresHandler = PostgresHandler()
     module = basic.AnsibleModule(argument_spec=postgresHandler.fields)
+    postgresHandler.setModuleParams(module.params)
+    postgresHandler.connectToDatabase()
     module.exit_json(changed=False, meta={ "hello": "world" })
 
 if __name__ == '__main__':

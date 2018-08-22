@@ -1,12 +1,16 @@
 import unittest
 from postgres import main, PostgresHandler
 from ansible.module_utils import basic
-from mock import MagicMock
+from mock import MagicMock, patch
+import psycopg2
+from faker import Faker
+fake = Faker('it_IT')
 
 class TestPostgresHandler(unittest.TestCase):
 
     def setUp(self):
         self.postgresHandler = PostgresHandler()
+        psycopg2.connect = MagicMock()
 
     def testAnsibleModuleIsCreated(self):
         module = MagicMock()
@@ -16,3 +20,21 @@ class TestPostgresHandler(unittest.TestCase):
         main()
 
         basic.AnsibleModule.assert_called_with(argument_spec=self.postgresHandler.fields)
+
+    def testConnectsToPostgresDatabaseWithParams(self):
+        module = MagicMock()
+        module.params = {
+            'database': fake.name(),
+            'host': fake.name(),
+            'port': fake.random_number(4),
+            'user': fake.name(),
+            'password': fake.name(),
+            'query': fake.name()
+        }
+        module.exit_json = MagicMock()
+        basic.AnsibleModule = MagicMock(return_value=module)
+        psycopg2.connect = MagicMock()
+
+        main()
+
+        psycopg2.connect.assert_called_with(host=module.params['host'], database=module.params['database'], user=module.params['user'], password=module.params['password'], port=module.params['port'])
