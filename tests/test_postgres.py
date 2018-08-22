@@ -3,7 +3,7 @@ from postgres import main, PostgresHandler
 from ansible.module_utils import basic
 from mock import MagicMock
 
-class test_postgres_query(unittest.TestCase):
+class TestPostgresHandler(unittest.TestCase):
 
     def setUp(self):
         self.postgresHandler = PostgresHandler()
