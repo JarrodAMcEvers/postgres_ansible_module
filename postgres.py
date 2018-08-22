@@ -8,9 +8,10 @@ class PostgresHandler():
 
     def getArgumentsSpec(self):
         return {
-            "db_host": { "required": True, "type": "str" },
-            "db_user": { "required": True, "type": "str" },
-            "db_pass": { "required": True, "type": "str" },
+            "host": { "required": True, "type": "str" },
+            "port": { "required": True, "type": "int" },
+            "user": { "required": True, "type": "str" },
+            "password": { "required": True, "type": "str" },
             "database": { "required": True, "type": "str" },
             "query": { "required": True, "type": "str" },
         }
