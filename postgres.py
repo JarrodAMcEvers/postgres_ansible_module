@@ -2,6 +2,7 @@
 from ansible.module_utils import basic
 from ansible.module_utils.basic import *
 import psycopg2 as psql
+import psycopg2.extras
 
 class PostgresHandler():
     def __init__(self):
@@ -26,7 +27,7 @@ class PostgresHandler():
         self.query = module_params['query']
 
     def executeQuery(self):
-        cursor = self.connection.cursor()
+        cursor = self.connection.cursor(cursor_factory=psql.extras.RealDictCursor)
         cursor.execute(self.query)
 
     def connectToDatabase(self):

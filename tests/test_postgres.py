@@ -41,8 +41,10 @@ class TestPostgresHandler(unittest.TestCase):
         cursor.execute = MagicMock()
         connection.cursor = MagicMock(return_value=cursor)
         psycopg2.connect = MagicMock(return_value=connection)
+        psycopg2.extras = MagicMock()
+        psycopg2.extras.RealDictCursor = MagicMock()
 
         main()
 
-        connection.cursor.assert_called()
+        connection.cursor.assert_called_with(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute.assert_called_with(self.module.params['query'])
