@@ -28,12 +28,12 @@ class PostgresHandler():
         self.query = module_params['query']
 
     def executeQuery(self):
-        cursor = self.connection.cursor(cursor_factory=psql.extras.RealDictCursor)
-        cursor.execute(self.query)
-        return json.dumps(cursor.fetchall(), indent=2)
+        self.cursor.execute(self.query)
+        return json.dumps(self.cursor.fetchall(), indent=2)
 
     def connectToDatabase(self):
         self.connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
+        self.cursor = self.connection.cursor(cursor_factory=psql.extras.RealDictCursor)
 
 
 def main():
