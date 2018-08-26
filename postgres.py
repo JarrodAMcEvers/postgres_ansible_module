@@ -26,7 +26,10 @@ class PostgresHandler():
         self.query = module_params['query']
 
     def connectToDatabase(self):
-        psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
+        connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
+        cursor = connection.cursor()
+        cursor.execute(self.query)
+
 
 def main():
     postgresHandler = PostgresHandler()
