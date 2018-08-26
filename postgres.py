@@ -3,7 +3,6 @@ from ansible.module_utils import basic
 from ansible.module_utils.basic import *
 import psycopg2 as psql
 import psycopg2.extras
-import json
 
 class PostgresHandler():
     def __init__(self):
