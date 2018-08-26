@@ -62,4 +62,4 @@ class TestPostgresHandler(unittest.TestCase):
 
         main()
 
-        self.module.exit_json.assert_called_with(changed=False, meta=fetchAllResult)
+        self.module.exit_json.assert_called_with(changed=False, result=fetchAllResult)
