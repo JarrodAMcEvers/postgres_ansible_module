@@ -25,10 +25,12 @@ class PostgresHandler():
         self.database = module_params['database']
         self.query = module_params['query']
 
-    def connectToDatabase(self):
-        connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
-        cursor = connection.cursor()
+    def executeQuery(self):
+        cursor = self.connection.cursor()
         cursor.execute(self.query)
+
+    def connectToDatabase(self):
+        self.connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
 
 
 def main():
@@ -36,6 +38,7 @@ def main():
     module = basic.AnsibleModule(argument_spec=postgresHandler.fields)
     postgresHandler.setModuleParams(module.params)
     postgresHandler.connectToDatabase()
+    postgresHandler.executeQuery()
     module.exit_json(changed=False, meta={ "hello": "world" })
 
 if __name__ == '__main__':
