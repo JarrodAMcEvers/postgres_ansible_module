@@ -29,7 +29,7 @@ class PostgresHandler():
 
     def executeQuery(self):
         self.cursor.execute(self.query)
-        return json.dumps(self.cursor.fetchall(), indent=2)
+        return self.cursor.fetchall()
 
     def connectToDatabase(self):
         self.connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)

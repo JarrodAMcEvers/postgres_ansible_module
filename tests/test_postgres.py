@@ -60,10 +60,6 @@ class TestPostgresHandler(unittest.TestCase):
         connection.cursor = MagicMock(return_value=cursor)
         psycopg2.connect = MagicMock(return_value=connection)
 
-        jsonDumpsResult = MagicMock()
-        json.dumps = MagicMock(return_value=jsonDumpsResult)
-
         main()
 
-        json.dumps.assert_called_with(fetchAllResult, indent=2)
-        self.module.exit_json.assert_called_with(changed=False, meta=jsonDumpsResult)
+        self.module.exit_json.assert_called_with(changed=False, meta=fetchAllResult)
