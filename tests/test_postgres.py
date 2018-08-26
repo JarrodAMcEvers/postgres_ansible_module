@@ -3,6 +3,7 @@ from postgres import main, PostgresHandler
 from ansible.module_utils import basic
 from mock import MagicMock, patch
 import psycopg2
+import json
 from faker import Faker
 fake = Faker('it_IT')
 
@@ -12,6 +13,7 @@ class TestPostgresHandler(unittest.TestCase):
         self.postgresHandler = PostgresHandler()
 
         psycopg2.connect = MagicMock()
+        json.dumps = MagicMock()
 
         self.module = MagicMock()
         self.module.params = {
@@ -48,3 +50,20 @@ class TestPostgresHandler(unittest.TestCase):
 
         connection.cursor.assert_called_with(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute.assert_called_with(self.module.params['query'])
+
+    def test(self):
+        connection = MagicMock()
+        cursor = MagicMock()
+        cursor.execute = MagicMock()
+        fetchAllResult = MagicMock()
+        cursor.fetchall = MagicMock(return_value=fetchAllResult)
+        connection.cursor = MagicMock(return_value=cursor)
+        psycopg2.connect = MagicMock(return_value=connection)
+
+        jsonDumpsResult = MagicMock()
+        json.dumps = MagicMock(return_value=jsonDumpsResult)
+
+        main()
+
+        json.dumps.assert_called_with(fetchAllResult, indent=2)
+        self.module.exit_json.assert_called_with(changed=False, meta=jsonDumpsResult)

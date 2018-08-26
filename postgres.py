@@ -3,6 +3,7 @@ from ansible.module_utils import basic
 from ansible.module_utils.basic import *
 import psycopg2 as psql
 import psycopg2.extras
+import json
 
 class PostgresHandler():
     def __init__(self):
@@ -29,6 +30,7 @@ class PostgresHandler():
     def executeQuery(self):
         cursor = self.connection.cursor(cursor_factory=psql.extras.RealDictCursor)
         cursor.execute(self.query)
+        return json.dumps(cursor.fetchall(), indent=2)
 
     def connectToDatabase(self):
         self.connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
@@ -39,8 +41,8 @@ def main():
     module = basic.AnsibleModule(argument_spec=postgresHandler.fields)
     postgresHandler.setModuleParams(module.params)
     postgresHandler.connectToDatabase()
-    postgresHandler.executeQuery()
-    module.exit_json(changed=False, meta={ "hello": "world" })
+    result = postgresHandler.executeQuery()
+    module.exit_json(changed=False, meta=result)
 
 if __name__ == '__main__':
     main()
