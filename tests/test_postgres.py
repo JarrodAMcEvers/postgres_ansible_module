@@ -49,7 +49,7 @@ class TestPostgresHandler(unittest.TestCase):
         self.connection.cursor.assert_called_with(cursor_factory=psycopg2.extras.RealDictCursor)
         self.cursor.execute.assert_called_with(self.module.params['query'])
 
-    def test(self):
+    def testQueryResultsAreReturnedForTheAnsibleModule(self):
         fetchAllResult = MagicMock()
         self.cursor.fetchall = MagicMock(return_value=fetchAllResult)
 
