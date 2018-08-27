@@ -41,7 +41,7 @@ def main():
     postgresHandler.setModuleParams(module.params)
     postgresHandler.connectToDatabase()
     result = postgresHandler.executeQuery()
-    module.exit_json(changed=False, result=result)
+    module.exit_json(changed=False, results=result)
 
 if __name__ == '__main__':
     main()
