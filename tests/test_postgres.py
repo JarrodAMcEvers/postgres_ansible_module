@@ -57,10 +57,19 @@ class TestPostgresHandler(unittest.TestCase):
 
         self.module.exit_json.assert_called_with(changed=False, results=fetchAllResult)
 
-    def testFailAnsibleModuleIfQueryThrowsAnError(self):
+    def testFailIfQueryThrowsAnError(self):
         error = psycopg2.ProgrammingError()
         self.cursor.fetchall.side_effect = error
 
         main()
 
         self.module.fail_json.assert_called_with(msg="Query failed: {}".format(error))
+
+    def testFailIfConnectionCannotBeMade(self):
+        error = psycopg2.OperationalError()
+        psycopg2.connect.side_effect = error
+
+        main()
+
+        self.module.fail_json.assert_called_with(msg='{}'.format(error))
+

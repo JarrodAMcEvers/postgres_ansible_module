@@ -3,7 +3,6 @@ from ansible.module_utils import basic
 from ansible.module_utils.basic import *
 import psycopg2 as psql
 import psycopg2.extras
-#psycopg2.ProgrammingError
 
 class PostgresHandler():
     def __init__(self):
@@ -40,7 +39,11 @@ def main():
     postgresHandler = PostgresHandler()
     module = basic.AnsibleModule(argument_spec=postgresHandler.fields)
     postgresHandler.setModuleParams(module.params)
-    postgresHandler.connectToDatabase()
+    try:
+        postgresHandler.connectToDatabase()
+    except psql.OperationalError as error:
+        return module.fail_json(msg='{}'.format(error))
+
     try:
         result = postgresHandler.executeQuery()
     except psql.ProgrammingError as error:
