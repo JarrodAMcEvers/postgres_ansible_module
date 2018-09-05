@@ -30,6 +30,12 @@ class TestPostgresHandler(unittest.TestCase):
         self.module.exit_json = MagicMock()
         basic.AnsibleModule = MagicMock(return_value=self.module)
 
+        self.testCases = [
+            [{ "one": 1, "two": 2}],
+            [{ "one": 1 }],
+            []
+        ]
+
     def testAnsibleModuleIsCreated(self):
         main()
 
@@ -49,13 +55,16 @@ class TestPostgresHandler(unittest.TestCase):
         self.connection.cursor.assert_called_with(cursor_factory=psycopg2.extras.RealDictCursor)
         self.cursor.execute.assert_called_with(self.module.params['query'])
 
-    def testQueryResultsAreReturnedForTheAnsibleModule(self):
-        fetchAllResult = MagicMock()
-        self.cursor.fetchall = MagicMock(return_value=fetchAllResult)
+    def testReturnQueryResultsAndRowCount(self):
+        for testCase in self.testCases:
+            length = len(testCase)
+            expectedResult = { 'rowCount': len(testCase), 'rows': testCase }
+            self.cursor.fetchall = MagicMock(return_value=testCase)
 
-        main()
+            main()
 
-        self.module.exit_json.assert_called_with(changed=False, results=fetchAllResult)
+            self.module.exit_json.assert_called_with(changed=True, results=expectedResult)
+
 
     def testFailIfQueryThrowsAnError(self):
         error = psycopg2.ProgrammingError()
@@ -72,4 +81,3 @@ class TestPostgresHandler(unittest.TestCase):
         main()
 
         self.module.fail_json.assert_called_with(msg='{}'.format(error))
-

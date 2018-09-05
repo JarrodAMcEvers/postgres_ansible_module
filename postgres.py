@@ -28,7 +28,8 @@ class PostgresHandler():
 
     def executeQuery(self):
         self.cursor.execute(self.query)
-        return self.cursor.fetchall()
+        results = self.cursor.fetchall()
+        return { 'rowCount': len(results), 'rows': results }
 
     def connectToDatabase(self):
         self.connection = psql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
@@ -46,9 +47,9 @@ def main():
 
     try:
         result = postgresHandler.executeQuery()
+        module.exit_json(changed=True, results=result)
     except psql.ProgrammingError as error:
         return module.fail_json(msg='Query failed: {}'.format(error))
-    module.exit_json(changed=False, results=result)
 
 if __name__ == '__main__':
     main()
