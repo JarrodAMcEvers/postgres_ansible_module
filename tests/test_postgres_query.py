@@ -1,5 +1,5 @@
 import unittest
-from postgres import main, PostgresHandler
+from postgres_query import main, PostgresHandler
 from ansible.module_utils import basic
 from mock import MagicMock, patch
 import psycopg2
