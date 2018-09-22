@@ -36,10 +36,20 @@ class TestPostgresHandler(unittest.TestCase):
             []
         ]
 
+    def testGetArgumentSpecReturnsExpectedDict(self):
+        assert self.postgresHandler.getArgumentSpec() == {
+            "host": { "required": True, "type": "str" },
+            "port": { "required": True, "type": "int" },
+            "user": { "required": True, "type": "str" },
+            "password": { "required": True, "type": "str" },
+            "database": { "required": True, "type": "str" },
+            "query": { "required": True, "type": "str" }
+        }
+
     def testAnsibleModuleIsCreated(self):
         main()
 
-        basic.AnsibleModule.assert_called_with(argument_spec=self.postgresHandler.fields)
+        basic.AnsibleModule.assert_called_with(argument_spec=self.postgresHandler.getArgumentSpec())
 
     def testConnectsToPostgresDatabaseWithParams(self):
         main()

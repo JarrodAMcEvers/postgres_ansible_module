@@ -6,9 +6,9 @@ import psycopg2.extras
 
 class PostgresHandler():
     def __init__(self):
-        self.fields = self.getArgumentsSpec()
+        pass
 
-    def getArgumentsSpec(self):
+    def getArgumentSpec(self):
         return {
             "host": { "required": True, "type": "str" },
             "port": { "required": True, "type": "int" },
@@ -38,7 +38,7 @@ class PostgresHandler():
 
 def main():
     postgresHandler = PostgresHandler()
-    module = basic.AnsibleModule(argument_spec=postgresHandler.fields)
+    module = basic.AnsibleModule(argument_spec=postgresHandler.getArgumentSpec())
     postgresHandler.setModuleParams(module.params)
     try:
         postgresHandler.connectToDatabase()
