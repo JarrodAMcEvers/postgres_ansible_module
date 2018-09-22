@@ -3,7 +3,7 @@ Ansible module that connects to a postgres database and executes a query against
 Usage in an ansible-playbook:
 ```
 - name: make the query
-  postgres:
+  postgres_query:
     host: 'localhost'
     port: 5432
     user: 'user'
