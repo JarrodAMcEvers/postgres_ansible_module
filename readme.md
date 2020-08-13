@@ -1,6 +1,6 @@
 Ansible module that connects to a postgres database and executes a query against it.
 
-Usage in an ansible-playbook:
+## Example usage:
 ```
 - name: make the query
   postgres_query:
@@ -11,10 +11,13 @@ Usage in an ansible-playbook:
     database: 'database'
     query: 'SELECT * FROM table;'
   register: result
+  
+- name: display results
+  debug: var=result
 ```
 
-Output:
-```
+## Result output:
+```JSON
 {
   "changed": true,
   "results": {
