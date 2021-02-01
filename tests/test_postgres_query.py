@@ -68,7 +68,7 @@ class TestPostgresHandler(unittest.TestCase):
     def testReturnQueryResultsAndRowCount(self):
         for testCase in self.testCases:
             length = len(testCase)
-            expectedResult = { 'rowCount': len(testCase), 'rows': testCase }
+            expectedResult = { 'row_count': len(testCase), 'rows': testCase }
             self.cursor.fetchall = MagicMock(return_value=testCase)
 
             main()
