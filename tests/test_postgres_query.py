@@ -73,7 +73,7 @@ class TestPostgresHandler(unittest.TestCase):
 
             main()
 
-            self.module.exit_json.assert_called_with(changed=True, results=expectedResult)
+            self.module.exit_json.assert_called_with(changed=True, ansible_module_results=expectedResult)
 
 
     def testFailIfQueryThrowsAnError(self):

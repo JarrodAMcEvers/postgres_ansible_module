@@ -47,7 +47,7 @@ def main():
 
     try:
         result = postgresHandler.executeQuery()
-        module.exit_json(changed=True, results=result)
+        module.exit_json(changed=True, ansible_module_results=result)
     except psql.ProgrammingError as error:
         return module.fail_json(msg='Query failed: {}'.format(error))
 
